@@ -1,10 +1,21 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { ChatAreaContainer, Message } from "./styles";
 
 const ChatArea = props => {
+  const containerRef = useRef(null);
   const { open, messages } = props;
+
+  useEffect(() => {
+    if (containerRef.current) {
+      debugger;
+      containerRef.current.scrollTo({
+        top: containerRef.current.scrollHeight
+      });
+    }
+  }, [messages]);
+
   return (
-    <ChatAreaContainer open={open}>
+    <ChatAreaContainer ref={containerRef} open={open}>
       {messages &&
         messages.length > 0 &&
         messages.map(message => (

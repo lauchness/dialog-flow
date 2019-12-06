@@ -4,10 +4,11 @@ async function detectIntent(
   sessionId,
   query,
   contexts,
-  languageCode
+  languageCode,
+  oAuth2Token
 ) {
   // The path to identify the agent that owns the created intent.
-  const sessionPath = sessionClient.sessionPath(projectId, sessionId);
+  const sessionPath = `projects/${projectId}/agent/sessions/${sessionId}`;
 
   // The text query request.
   const request = {
@@ -32,15 +33,16 @@ async function detectIntent(
   const responses = await fetch(proxyurl + url, {
     method: "POST",
     headers: {
-      Authorization:
-        "Bearer ya29.c.Kl20BxK1rX917-w4UxVltUrK5U2Lc3LzQY4YNSYFWUMJMh4QWJJMCebLyJYlzn9SXWwc_0NAi0XNN5_7f8cnrTH3SVsT1P0g-q0G6ABhObrMkRkP5bMeZCYyeMzd4ro",
+      Authorization: `Bearer ${oAuth2Token.access_token}`,
       "Content-Type": "application/json; charset=utf-8"
     },
     body: JSON.stringify(request)
   });
 
+  const data = await responses.json();
+
   // const responses = await sessionClient.detectIntent(request);
-  return responses[0];
+  return data;
 }
 
 export async function executeQuery(
@@ -49,7 +51,8 @@ export async function executeQuery(
   sessionId,
   query,
   languageCode,
-  context
+  context,
+  oAuth2Token
 ) {
   // Keeping the context across queries let's us simulate an ongoing conversation with the bot
   let intentResponse;
@@ -62,12 +65,14 @@ export async function executeQuery(
       sessionId,
       query,
       context,
-      languageCode
+      languageCode,
+      oAuth2Token
     );
     console.log("Detected intent");
     console.log(
       `Fulfillment Text: ${intentResponse.queryResult.fulfillmentText}`
     );
+
     // Use the context from this response for next queries
     const outputContexts = intentResponse.queryResult.outputContexts;
     return { intentResponse, outputContexts };

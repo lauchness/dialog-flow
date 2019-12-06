@@ -27,7 +27,9 @@ function App() {
     }
   `;
 
-  const [oAuth2Client] = useState(null);
+  const [oAuth2Token, setOAuth2Token] = useState(
+    JSON.parse(window.localStorage.getItem("lauchie-chat-auth-token"))
+  );
   const [dialogflowSession, setDialogflowSession] = useState(null);
 
   return (
@@ -39,6 +41,7 @@ function App() {
           exact
           render={({ history }) => (
             <ChatSession
+              oAuth2Token={oAuth2Token}
               dialogflowSession={dialogflowSession}
               history={history}
             />
@@ -48,7 +51,8 @@ function App() {
           path="/receive-auth"
           component={({ history, location }) => (
             <HandleAuth
-              oAuth2Client={oAuth2Client}
+              oAuth2Token={oAuth2Token}
+              setOAuth2Token={setOAuth2Token}
               setDialogflowSession={setDialogflowSession}
               dialogflowSession={dialogflowSession}
               history={history}

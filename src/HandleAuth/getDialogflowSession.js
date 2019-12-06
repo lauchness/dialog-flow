@@ -11,5 +11,8 @@ export async function getDialogflowSession(code) {
   global.isBrowser = true;
 
   // // Instantiates a session client
-  return new SessionsClient({ auth: oauth2client });
+  return {
+    sessionsClient: new SessionsClient({ auth: oauth2client }),
+    token: tokenResponse.tokens
+  };
 }

@@ -13,13 +13,13 @@ const sessionId = "123456789";
 const languageCode = "en-US";
 
 const ChatSession = props => {
-  const { history, dialogflowSession } = props;
+  const { history, dialogflowSession, oAuth2Token } = props;
   const [isOpen, setIsOpen] = useState(true);
   const [messages, setMessages] = useState([]);
   const [context, setContext] = useState("");
 
   useEffect(() => {
-    if (!dialogflowSession) {
+    if (!dialogflowSession && !oAuth2Token) {
       async function waitForAuthUrl() {
         return await getAuthUrl();
       }
@@ -29,25 +29,34 @@ const ChatSession = props => {
       });
     }
     console.log(dialogflowSession);
-  }, [dialogflowSession, history]);
+  }, [dialogflowSession, history, oAuth2Token]);
 
-  const handleSubmitText = text => {
-    setMessages([
-      ...messages,
-      {
-        id: new Date().getTime(),
-        request: true,
-        text
-      }
-    ]);
-    executeQuery(
+  const handleSubmitText = async text => {
+    const myRequest = {
+      id: new Date().getTime(),
+      request: true,
+      text
+    };
+    setMessages([...messages, myRequest]);
+    const response = await executeQuery(
       dialogflowSession,
       projectId,
       sessionId,
       text,
       languageCode,
-      context
+      context,
+      oAuth2Token
     );
+    setContext(response.outputContexts);
+    setMessages([
+      ...messages,
+      myRequest,
+      {
+        id: response.intentResponse.responseId,
+        request: false,
+        text: response.intentResponse.queryResult.fulfillmentText
+      }
+    ]);
   };
 
   return (
