@@ -17,7 +17,11 @@
 .env.development.local
 .env.test.local
 .env.production.local
+.env
+Testing Dialog Flow-81a9ad7a8ca5.json
 
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+*secret.json
