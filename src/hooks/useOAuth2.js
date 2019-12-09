@@ -38,7 +38,7 @@ export default (keys, scopes) => {
       const { tokens } = await oAuthClient.getToken(code);
       return tokens;
     };
-    getTokens(oAuth2ClientRef.current, code).then(({ tokens }) => {
+    getTokens(oAuth2ClientRef.current, code).then(tokens => {
       oAuth2ClientRef.current.setCredentials(tokens);
       window.localStorage.setItem(localStorageKey, JSON.stringify(tokens));
       setOAuth2Token(tokens);

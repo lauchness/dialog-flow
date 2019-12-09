@@ -5,7 +5,6 @@ import { color, font } from "./theme";
 import ChatSession from "./ChatSession/ChatSession";
 import HandleAuth from "./HandleAuth/HandleAuth";
 import useOAuth2 from "./hooks/useOAuth2";
-import useDialogflow from "./hooks/useDialogflow";
 import keys from "./secret.json";
 
 const appScopes = [
