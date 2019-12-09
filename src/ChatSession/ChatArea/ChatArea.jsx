@@ -7,7 +7,6 @@ const ChatArea = props => {
 
   useEffect(() => {
     if (containerRef.current) {
-      debugger;
       containerRef.current.scrollTo({
         top: containerRef.current.scrollHeight
       });

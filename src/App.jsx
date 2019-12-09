@@ -1,9 +1,18 @@
-import React, { useState } from "react";
+import React from "react";
 import { Switch, Route } from "react-router-dom";
 import { Global, css } from "@emotion/core";
 import { color, font } from "./theme";
 import ChatSession from "./ChatSession/ChatSession";
 import HandleAuth from "./HandleAuth/HandleAuth";
+import useOAuth2 from "./hooks/useOAuth2";
+import useDialogflow from "./hooks/useDialogflow";
+import keys from "./secret.json";
+
+const appScopes = [
+  // scopes for Dialogflow
+  "https://www.googleapis.com/auth/cloud-platform",
+  "https://www.googleapis.com/auth/dialogflow"
+];
 
 function App() {
   const globalStyles = css`
@@ -27,10 +36,7 @@ function App() {
     }
   `;
 
-  const [oAuth2Token, setOAuth2Token] = useState(
-    JSON.parse(window.localStorage.getItem("lauchie-chat-auth-token"))
-  );
-  const [dialogflowSession, setDialogflowSession] = useState(null);
+  const oAuth2 = useOAuth2(keys, appScopes);
 
   return (
     <div>
@@ -40,24 +46,13 @@ function App() {
           path="/"
           exact
           render={({ history }) => (
-            <ChatSession
-              oAuth2Token={oAuth2Token}
-              dialogflowSession={dialogflowSession}
-              history={history}
-            />
+            <ChatSession oAuth2={oAuth2} history={history} />
           )}
         />
         <Route
           path="/receive-auth"
-          component={({ history, location }) => (
-            <HandleAuth
-              oAuth2Token={oAuth2Token}
-              setOAuth2Token={setOAuth2Token}
-              setDialogflowSession={setDialogflowSession}
-              dialogflowSession={dialogflowSession}
-              history={history}
-              location={location}
-            />
+          component={({ history }) => (
+            <HandleAuth history={history} oAuth2Token={oAuth2.tokens} />
           )}
         />
       </Switch>
