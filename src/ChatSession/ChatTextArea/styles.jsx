@@ -13,6 +13,7 @@ export const ChatTextAreaContainer = styled.div`
     resize: none;
     border: none;
     padding: ${({ open }) => (open ? "0.5rem" : "0")};
+    font-size: ${font.size.regular};
     font-family: ${font.family.regular};
     color: ${color.darkGray};
   }

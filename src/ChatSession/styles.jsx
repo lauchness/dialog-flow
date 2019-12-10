@@ -16,9 +16,9 @@ export const ChatSessionContainer = styled.div`
   grid-template-rows: ${({ open }) => (open ? "7rem 1fr 5rem" : "7rem 0 0")};
 
   ${mediaQuery.large} {
-    width: 30rem;
-    height: 45rem;
-    max-height: ${({ open }) => (open ? "45rem" : "7rem")};
+    width: 37.5rem;
+    height: 55rem;
+    max-height: ${({ open }) => (open ? "55rem" : "7rem")};
     bottom: 1rem;
     right: 1rem;
   }

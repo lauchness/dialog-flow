@@ -4,7 +4,7 @@ import { OAuth2Client } from "google-auth-library";
 export default (keys, scopes) => {
   // store the oAuth2Client between renders
   const oAuth2ClientRef = useRef(null);
-  const localStorageKey = `${keys.web.client_id}-auth-token`;
+  const localStorageKey = `${keys.web.project_id}-auth-token`;
 
   // instantiate oAuth2Client
   if (!oAuth2ClientRef.current) {
