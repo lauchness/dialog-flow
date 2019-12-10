@@ -25,16 +25,24 @@ const ChatSession = props => {
       text
     };
     setMessages([...messages, myRequest]);
-    const response = await executeQuery(text, languageCode);
-    setMessages([
-      ...messages,
-      myRequest,
-      {
-        id: response.intentResponse.responseId,
+    setTimeout(async () => {
+      const loading = {
+        id: "Loading",
         request: false,
-        text: response.intentResponse.queryResult.fulfillmentText
-      }
-    ]);
+        text: "..."
+      };
+      setMessages([...messages, myRequest, loading]);
+      const response = await executeQuery(text, languageCode);
+      setMessages([
+        ...messages,
+        myRequest,
+        {
+          id: response.intentResponse.responseId,
+          request: false,
+          text: response.intentResponse.queryResult.fulfillmentText
+        }
+      ]);
+    }, 500);
   };
 
   return (
