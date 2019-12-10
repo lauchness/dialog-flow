@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { SessionsClient } from "dialogflow";
 
 export default (oAuth2, keys, sessionId) => {
-  const { tokens, oAuth2Client } = oAuth2;
+  const { tokens, oAuth2Client, invalidate } = oAuth2;
   const [sessionClient, setSessionClient] = useState(null);
   const [contexts, setContexts] = useState("");
 
@@ -16,7 +16,7 @@ export default (oAuth2, keys, sessionId) => {
     }
   }, [oAuth2Client, sessionClient]);
 
-  async function detectIntent(query, languageCode) {
+  const detectIntent = async (query, languageCode) => {
     // The path to identify the agent that owns the created intent.
     const sessionPath = sessionClient.sessionPath(
       keys.web.project_id,
@@ -56,22 +56,24 @@ export default (oAuth2, keys, sessionId) => {
 
     // const responses = await sessionClient.detectIntent(request);
     return data;
-  }
+  };
 
-  async function executeQuery(query, languageCode) {
+  const executeQuery = async (query, languageCode) => {
     // Keeping the context across queries let's us simulate an ongoing conversation with the bot
     let intentResponse;
+    let outputContexts;
 
     try {
       intentResponse = await detectIntent(query, languageCode);
       // Use the context from this response for next queries
-      const outputContexts = intentResponse.queryResult.outputContexts;
+      outputContexts = intentResponse.queryResult.outputContexts;
       setContexts(outputContexts);
       return { intentResponse, outputContexts };
     } catch (error) {
-      console.log(error);
+      invalidate();
+      return { intentResponse, outputContexts };
     }
-  }
+  };
 
   return { executeQuery };
 };
