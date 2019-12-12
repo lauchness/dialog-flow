@@ -1,15 +1,19 @@
-import styled from "@emotion/styled";
-import { color } from "../../theme";
+import styled from '@emotion/styled';
+import { color } from '../../theme';
 
 export const ChatAreaContainer = styled.div`
   background: transparent;
-  max-height: ${({ open }) => (open ? "100%" : "0")};
+  max-height: ${({ open }) => (open ? '100%' : '0')};
   padding: 1rem;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  overflow: scroll;
+  overflow-y: scroll;
+  &::-webkit-scrollbar {
+    background: transparent;
+    width: 0.5rem;
+  }
 `;
 
 export const Message = styled.div`
@@ -23,7 +27,7 @@ export const Message = styled.div`
 
   &::after {
     position: absolute;
-    content: "";
+    content: '';
     height: 1rem;
     width: 1rem;
     transform: rotateZ(45deg);
