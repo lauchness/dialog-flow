@@ -1,19 +1,19 @@
-import React from "react";
-import { Switch, Route } from "react-router-dom";
-import { Global, css } from "@emotion/core";
-import { color, font } from "./theme";
-import ChatSession from "./ChatSession/ChatSession";
-import HandleAuth from "./HandleAuth/HandleAuth";
-import useOAuth2 from "./hooks/useOAuth2";
-import keys from "./secret.json";
+import React from 'react'
+import { Switch, Route } from 'react-router-dom'
+import { Global, css } from '@emotion/core'
+import { color, font } from './theme'
+import ChatSession from './ChatSession/ChatSession'
+import HandleAuth from './HandleAuth/HandleAuth'
+import useOAuth2 from './hooks/useOAuth2'
+import keys from './secret.json'
 
 const appScopes = [
   // scopes for Dialogflow
-  "https://www.googleapis.com/auth/cloud-platform",
-  "https://www.googleapis.com/auth/dialogflow"
-];
+  'https://www.googleapis.com/auth/cloud-platform',
+  'https://www.googleapis.com/auth/dialogflow'
+]
 
-function App() {
+function App () {
   const globalStyles = css`
     html {
       font-size: 62.5%;
@@ -33,30 +33,30 @@ function App() {
     code {
       font-family: ${font.family.code};
     }
-  `;
+  `
 
-  const oAuth2 = useOAuth2(keys, appScopes);
+  // const oAuth2 = useOAuth2(keys, appScopes);
 
   return (
     <div>
       <Global styles={globalStyles} />
       <Switch>
         <Route
-          path="/"
+          path='/'
           exact
           render={({ history }) => (
-            <ChatSession oAuth2={oAuth2} history={history} />
+            <ChatSession /*oAuth2={oAuth2}*/ history={history} />
           )}
         />
-        <Route
+        {/*<Route
           path="/receive-auth"
           component={({ history }) => (
             <HandleAuth history={history} oAuth2Token={oAuth2.tokens} />
           )}
-        />
+        />*/}
       </Switch>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
