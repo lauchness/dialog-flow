@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Switch, Route } from 'react-router-dom'
 import { Global, css } from '@emotion/core'
+import Pivo from '@evolvable-by-design/pivo'
 import { color, font } from './theme'
 import ChatSession from './ChatSession/ChatSession'
 import HandleAuth from './HandleAuth/HandleAuth'
@@ -37,26 +38,38 @@ function App () {
 
   // const oAuth2 = useOAuth2(keys, appScopes);
 
-  return (
-    <div>
-      <Global styles={globalStyles} />
-      <Switch>
-        <Route
-          path='/'
-          exact
-          render={({ history }) => (
-            <ChatSession /*oAuth2={oAuth2}*/ history={history} />
-          )}
-        />
-        {/*<Route
-          path="/receive-auth"
-          component={({ history }) => (
-            <HandleAuth history={history} oAuth2Token={oAuth2.tokens} />
-          )}
-        />*/}
-      </Switch>
-    </div>
-  )
+  const [ apiDocumentation, setApiDocumentation ] = useState(undefined)
+  useEffect(() => {
+    fetch('http://localhost:4000', { method: 'OPTIONS', mode: 'cors' })
+      .then(response => response.json()).then(doc => {
+        setApiDocumentation(new Pivo(doc))
+      })
+  }, [])
+
+  if (apiDocumentation === undefined) {
+    return <p>Loading...</p>
+  } else {
+    return (
+      <div>
+        <Global styles={globalStyles} />
+        <Switch>
+          <Route
+            path='/'
+            exact
+            render={({ history }) => (
+              <ChatSession /*oAuth2={oAuth2}*/ apiDoc={apiDocumentation}  history={history} />
+            )}
+          />
+          {/*<Route
+            path="/receive-auth"
+            component={({ history }) => (
+              <HandleAuth history={history} oAuth2Token={oAuth2.tokens} />
+            )}
+          />*/}
+        </Switch>
+      </div>
+    )
+  }
 }
 
 export default App

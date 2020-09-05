@@ -7,6 +7,7 @@ import Chevron from '../icons/Chevron';
 import { color } from '../theme';
 import useDialogflow from '../hooks/useDialogflow';
 import keys from '../secret.json';
+import { Vocabulary } from '../vocabulary'
 
 const sessionId = '123456789';
 const languageCode = 'en-US';
@@ -24,14 +25,12 @@ const ChatSession = props => {
       context: context,
       languageCode: languageCode
     };
-    const response = await fetch('http://localhost:4000/intent', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json; charset=utf-8'
-      },
-      body: JSON.stringify(request)
-    }).then(res => res.json());
-    return response;
+
+    const response = await props.apiDoc.does(Vocabulary.detectIntents)
+      .map(operation => operation.invoke(request))
+      .getOrUndefined()
+    
+    return response.data;
   };
 
   const handleSubmitText = async text => {
@@ -48,15 +47,16 @@ const ChatSession = props => {
         text: '...'
       };
       setMessages([...messages, myRequest, loading]);
-      const response = await executeQuery(text);
+      const response = await executeQuery(text); // work here because the new returned type is a SemanticHttpResponse
+      
+      const id = await response.getOneValue(Vocabulary.responseId)
+      const queryResult = await response.getOne(Vocabulary.queryResult)
+      const fulfillmentText = await queryResult.getOneValue(Vocabulary.fulfillmentText)
+
       setMessages([
         ...messages,
         myRequest,
-        {
-          id: response.intentResponse.responseId,
-          request: false,
-          text: response.intentResponse.queryResult.fulfillmentText
-        }
+        { id, request: false, text: fulfillmentText }
       ]);
     }, 500);
   };

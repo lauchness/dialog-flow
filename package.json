@@ -5,6 +5,8 @@
   "dependencies": {
     "@emotion/core": "^10.0.22",
     "@emotion/styled": "^10.0.23",
+    "@evolvable-by-design/pivo": "^0.0.2",
+    "axios": "^0.20.0",
     "dialogflow": "^0.14.1",
     "google-auth-library": "^5.6.0",
     "react": "^16.12.0",
